@@ -1,0 +1,949 @@
+// import { Pencil, Trash } from 'lucide-react';
+// import { useEffect, useState } from 'react';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { DeleteManager, fetchAllManagers } from '../../slices/ManagerSlice';
+// import UserDeleteModal from '../../components/Modals/UserManagement/DeleteModal';
+// import { setManagerDeleteModalOpen,setManagerEditModalOpen } from '../../slices/ManagerSlice';
+// import Swal from 'sweetalert2';
+// import UserEditModal from '../../components/Modals/UserManagement/EditModal';
+// import "../../styles/pages/management-pages.css"
+
+// const UserList = ({ onUserSelect, selectedUser }) => {
+//   const [userEmail, setUserEmail] = useState("")
+//   const [userId, setUserId] = useState(null)
+
+//   const dispatch = useDispatch()
+//   const {Managers,ManagerDeleteModalOpen,ManagerEditModalOpen} = useSelector((state)=>state.Manager)
+
+//   // Dummy users data for static display
+//   const dummyUsers = [
+//     { id: 1, email: 'john.doe@company.com', status: 'Active', name: 'John Doe' },
+//     { id: 2, email: 'jane.smith@company.com', status: 'Active', name: 'Jane Smith' },
+//     { id: 3, email: 'michael.johnson@company.com', status: 'Inactive', name: 'Michael Johnson' },
+//     { id: 4, email: 'sarah.williams@company.com', status: 'Active', name: 'Sarah Williams' },
+//     { id: 5, email: 'david.brown@company.com', status: 'Active', name: 'David Brown' },
+//     { id: 6, email: 'emily.davis@company.com', status: 'Inactive', name: 'Emily Davis' },
+//     { id: 7, email: 'robert.miller@company.com', status: 'Active', name: 'Robert Miller' },
+//     { id: 8, email: 'lisa.wilson@company.com', status: 'Active', name: 'Lisa Wilson' },
+//   ]
+
+//   // Use dummy data if no managers from Redux
+//   const displayUsers = Managers && Managers.length > 0 ? Managers : dummyUsers
+
+//   useEffect(()=>{
+//     dispatch(fetchAllManagers())
+//   },[dispatch])
+
+//   const handleDeleteOpen=(email,id)=>{
+//     dispatch(setManagerDeleteModalOpen(true))
+//     setUserEmail(email)
+//     setUserId(id)
+//   }
+//   const handleDeleteClose=()=>{
+//     dispatch(setManagerDeleteModalOpen(false))
+//     setUserEmail("")
+//   }
+//   const handleEditOpen=(id)=>{
+//     dispatch(setManagerEditModalOpen(true))
+//     setUserId(id)
+//   }
+//   const handleEditClose=()=>{
+//     dispatch(setManagerEditModalOpen(false))
+//     setUserId(null)
+//   }
+
+//   const handleDelete=()=>{
+//     dispatch(DeleteManager(userId)).unwrap().then((res)=>{
+//       if(res.success){
+//         dispatch(setManagerDeleteModalOpen(false))
+//         Swal.fire(res.message,"success")
+//         dispatch(fetchAllManagers())
+//       }
+//     })
+//   }
+
+//   const handleRowClick = (user, e) => {
+//     e.stopPropagation();
+//     onUserSelect && onUserSelect(user);
+//   };
+
+//   return (
+//     <>
+//     <div 
+//       className="ListPage user-list-container bg-white rounded-xl shadow-sm w-full h-full border border-[#E5E7EB]"
+//     >
+//       <h1 className="user-list-title font-semibold text-gray-800 mb-4">User Management</h1>
+//       <div className="mb-4">
+//         <h2 className="user-list-header text-center font-semibold text-gray-800">User List</h2>
+//         <div className="mx-auto mt-2 h-px w-4/5 bg-[#2563EB]/40"></div>
+//       </div>
+
+//       <div className="overflow-x-auto">
+//         <table className="w-full table-auto text-left">
+//           <thead>
+//             <tr className="bg-gray-100">
+//               <th className="user-table-header py-2 px-4 font-bold text-gray-800 text-left">Email</th>
+//               <th className="user-table-header py-2 px-4 font-bold text-gray-800 text-right">Status</th>
+//               <th className="user-table-header py-2 px-4 text-center">Actions</th>
+//             </tr>
+//           </thead>
+//         </table>
+
+//         <div className="user-table-scroll overflow-y-auto pr-1">
+//           <table className="w-full table-auto text-left">
+//             <tbody>
+//               {displayUsers.map((u, index) => (
+//                 <tr 
+//                   key={u.id || index} 
+//                   className={`border-b border-gray-200 cursor-pointer transition-colors hover:bg-blue-50/60 ${
+//                     selectedUser?.id === u.id ? 'bg-blue-50 border-blue-300' : ''
+//                   }`}
+//                   onClick={(e) => handleRowClick(u, e)}
+//                 >
+//                   <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4">{index + 1}. {u.email || u.name}</td>
+//                   <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4 text-left">
+//                     <span className={`inline-block px-3 py-1 rounded text-xs font-semibold ${
+//                       (u.status || 'Active') === 'Active' 
+//                         ? 'bg-green-100 text-green-800 border border-green-300' 
+//                         : 'bg-red-100 text-red-800 border border-red-300'
+//                     }`}>
+//                       {u.status || 'Active'}
+//                     </span>
+//                   </td>
+//                   <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4">
+//                     <div className="flex justify-center gap-2 sm:gap-3" onClick={(e) => e.stopPropagation()}>
+//                       <button onClick={() => handleEditOpen(u.id)} className="user-action-btn rounded-full border border-green-500/50 bg-white flex items-center justify-center hover:bg-green-50 w-8 h-8">
+//                         <Pencil className="text-green-600 user-action-icon" size={16} />
+//                       </button>
+//                       <button onClick={() => handleDeleteOpen(u.email || u.name, u.id)} className="user-action-btn rounded-full border border-red-500/50 bg-white flex items-center justify-center hover:bg-red-50 w-8 h-8">
+//                         <Trash className="text-red-600 user-action-icon" size={16} />
+//                       </button>
+//                     </div>
+//                   </td>
+//                 </tr>
+//               ))}
+//             </tbody>
+//           </table>
+//         </div>
+//       </div>
+//     </div>
+//     {ManagerDeleteModalOpen && <UserDeleteModal userEmail={userEmail} handleClose={handleDeleteClose} handleDelete={handleDelete} />}
+//     {ManagerEditModalOpen && <UserEditModal handleClose={handleEditClose} id={userId} />}
+//     </>
+//   );
+// };
+
+// export default UserList;
+
+
+
+
+
+
+
+
+
+
+// src/pages/UserManagement/UserList.jsx
+// import { Pencil, Trash } from "lucide-react";
+// import { useEffect, useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { DeleteManager, fetchAllManagers, setManagerDeleteModalOpen, setManagerEditModalOpen } from "../../slices/ManagerSlice";
+// import UserDeleteModal from "../../components/Modals/UserManagement/DeleteModal";
+// import UserEditModal from "../../components/Modals/UserManagement/EditModal";
+// import Swal from "sweetalert2";
+// import "../../styles/pages/management-pages.css";
+
+// const UserList = ({ onUserSelect, selectedUser }) => {
+//   const [userEmail, setUserEmail] = useState("");
+//   const [userId, setUserId] = useState(null);
+
+//   const dispatch = useDispatch();
+//   const { Managers, ManagerDeleteModalOpen, ManagerEditModalOpen, isLoading, error } =
+//     useSelector((state) => state.Manager);
+
+//   // load managers on mount
+//   useEffect(() => {
+//     dispatch(fetchAllManagers());
+//   }, [dispatch]);
+
+//   const handleDeleteOpen = (email, id) => {
+//     dispatch(setManagerDeleteModalOpen(true));
+//     setUserEmail(email);
+//     setUserId(id);
+//   };
+
+//   const handleDeleteClose = () => {
+//     dispatch(setManagerDeleteModalOpen(false));
+//     setUserEmail("");
+//     setUserId(null);
+//   };
+
+//   const handleEditOpen = (id) => {
+//     dispatch(setManagerEditModalOpen(true));
+//     setUserId(id);
+//   };
+
+//   const handleEditClose = () => {
+//     dispatch(setManagerEditModalOpen(false));
+//     setUserId(null);
+//   };
+
+//   const handleDelete = async () => {
+//     try {
+//       const resultAction = await dispatch(DeleteManager(userId)).unwrap();
+//       // success
+//       Swal.fire({
+//         icon: "success",
+//         title: "Deleted",
+//         text: resultAction?.message || "User deleted",
+//       });
+//       dispatch(setManagerDeleteModalOpen(false));
+//       // managers state already updated in reducer, but you can re-fetch if required
+//       // dispatch(fetchAllManagers());
+//     } catch (err) {
+//       Swal.fire({
+//         icon: "error",
+//         title: "Error",
+//         text: err || "Failed to delete user",
+//       });
+//     }
+//   };
+
+//   const handleRowClick = (user, e) => {
+//     e.stopPropagation();
+//     onUserSelect && onUserSelect(user);
+//   };
+
+//   const displayUsers = Managers && Managers.length > 0 ? Managers : [];
+
+//   return (
+//     <>
+//       <div className="ListPage user-list-container bg-white rounded-xl shadow-sm w-full h-full border border-[#E5E7EB]">
+//         <h1 className="user-list-title font-semibold text-gray-800 mb-4">User Management</h1>
+
+//         <div className="mb-4">
+//           <h2 className="user-list-header text-center font-semibold text-gray-800">User List</h2>
+//           <div className="mx-auto mt-2 h-px w-4/5 bg-[#2563EB]/40"></div>
+//         </div>
+
+//         {isLoading ? (
+//           <div className="p-6 text-center">Loading users...</div>
+//         ) : error ? (
+//           <div className="p-6 text-center text-red-600">Error: {error}</div>
+//         ) : displayUsers.length === 0 ? (
+//           <div className="p-6 text-center text-gray-600">No users found.</div>
+//         ) : (
+//           <div className="overflow-x-auto">
+//             <table className="w-full table-auto text-left">
+//               <thead>
+//                 <tr className="bg-gray-100">
+//                   <th className="user-table-header py-2 px-4 font-bold text-gray-800 text-left">#</th>
+//                   <th className="user-table-header py-2 px-4 font-bold text-gray-800 text-left">Name / Email</th>
+//                   <th className="user-table-header py-2 px-4 font-bold text-gray-800 text-right">Status</th>
+//                   <th className="user-table-header py-2 px-4 text-center">Actions</th>
+//                 </tr>
+//               </thead>
+
+//               <tbody>
+//                 {displayUsers.map((u, index) => (
+//                   <tr
+//                     key={u._id || index}
+//                     className={`border-b border-gray-200 cursor-pointer transition-colors hover:bg-blue-50/60 ${
+//                       selectedUser?._id === u._id ? "bg-blue-50 border-blue-300" : ""
+//                     }`}
+//                     onClick={(e) => handleRowClick(u, e)}
+//                   >
+//                     <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4">{index + 1}</td>
+//                     <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4">
+//                       <div className="font-medium">{u.name || u.email}</div>
+//                       <div className="text-sm text-gray-500">{u.email}</div>
+//                     </td>
+//                     <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4 text-left">
+//                       <span
+//                         className={`inline-block px-3 py-1 rounded text-xs font-semibold ${
+//                           u.isActive ? "bg-green-100 text-green-800 border border-green-300" : "bg-red-100 text-red-800 border border-red-300"
+//                         }`}
+//                       >
+//                         {u.isActive ? "Active" : "Inactive"}
+//                       </span>
+//                     </td>
+//                     <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4">
+//                       <div className="flex justify-center gap-2 sm:gap-3" onClick={(e) => e.stopPropagation()}>
+//                         <button onClick={() => handleEditOpen(u._id)} className="user-action-btn rounded-full border border-green-500/50 bg-white flex items-center justify-center hover:bg-green-50 w-8 h-8">
+//                           <Pencil className="text-green-600 user-action-icon" size={16} />
+//                         </button>
+//                         <button onClick={() => handleDeleteOpen(u.email, u._id)} className="user-action-btn rounded-full border border-red-500/50 bg-white flex items-center justify-center hover:bg-red-50 w-8 h-8">
+//                           <Trash className="text-red-600 user-action-icon" size={16} />
+//                         </button>
+//                       </div>
+//                     </td>
+//                   </tr>
+//                 ))}
+//               </tbody>
+//             </table>
+//           </div>
+//         )}
+//       </div>
+
+//       {ManagerDeleteModalOpen && <UserDeleteModal userEmail={userEmail} handleClose={handleDeleteClose} handleDelete={handleDelete} />}
+//       {ManagerEditModalOpen && <UserEditModal handleClose={handleEditClose} id={userId} />}
+//     </>
+//   );
+// };
+
+// export default UserList;
+
+
+
+
+
+
+
+
+
+
+// // src/pages/UserManagement/UserList.jsx
+// import { Pencil, Trash } from "lucide-react";
+// import { useEffect, useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { DeleteManager, fetchAllManagers, setManagerDeleteModalOpen, setManagerEditModalOpen } from "../../slices/ManagerSlice";
+// import Swal from "sweetalert2";
+// import "../../styles/pages/management-pages.css";
+// import UserDeleteModal from "../../components/Modals/UserManagement/DeleteModal";
+// import UserEditModal from "../../components/Modals/UserManagement/EditModal";
+
+// const UserList = ({ onUserSelect, selectedUser }) => {
+//   const [userEmail, setUserEmail] = useState("");
+//   const [userId, setUserId] = useState(null);
+
+//   const dispatch = useDispatch();
+//   const { Managers, ManagerDeleteModalOpen, ManagerEditModalOpen, isLoading, error } =
+//     useSelector((state) => state.Manager);
+
+//   useEffect(() => {
+//     dispatch(fetchAllManagers());
+//   }, [dispatch]);
+
+//   const handleDeleteOpen = (email, id) => {
+//     dispatch(setManagerDeleteModalOpen(true));
+//     setUserEmail(email);
+//     setUserId(id);
+//   };
+
+//   const handleDeleteClose = () => {
+//     dispatch(setManagerDeleteModalOpen(false));
+//     setUserEmail("");
+//     setUserId(null);
+//   };
+
+//   const handleEditOpen = (id) => {
+//     dispatch(setManagerEditModalOpen(true));
+//     setUserId(id);
+//   };
+
+//   const handleEditClose = () => {
+//     dispatch(setManagerEditModalOpen(false));
+//     setUserId(null);
+//   };
+
+//   const handleDelete = async () => {
+//     try {
+//       const id = userId;
+//       const deletedId = await dispatch(DeleteManager(id)).unwrap();
+//       // success
+//       Swal.fire({
+//         icon: "success",
+//         title: "Deleted",
+//         text: "User deleted",
+//       });
+//       dispatch(setManagerDeleteModalOpen(false));
+//       // no need to re-fetch — reducer already removed the user
+//     } catch (err) {
+//       Swal.fire({
+//         icon: "error",
+//         title: "Error",
+//         text: err || "Failed to delete user",
+//       });
+//     }
+//   };
+
+//   const handleRowClick = (user, e) => {
+//     e.stopPropagation();
+//     onUserSelect && onUserSelect(user);
+//   };
+
+//   const displayUsers = Managers && Managers.length > 0 ? Managers : [];
+
+//   return (
+//     <>
+//       <div 
+//       className="ListPage user-list-container bg-white rounded-xl shadow-sm w-full h-full border border-[#E5E7EB]">
+//         <h1 className="user-list-title font-semibold text-gray-800 mb-4">User Management</h1>
+
+//         <div className="mb-4">
+//           <h2 className="user-list-header text-center font-semibold text-gray-800">User List</h2>
+//           <div className="mx-auto mt-2 h-px w-4/5 bg-[#2563EB]/40"></div>
+//         </div>
+
+//         {isLoading ? (
+//           <div className="p-6 text-center">Loading users...</div>
+//         ) : error ? (
+//           <div className="p-6 text-center text-red-600">Error: {error}</div>
+//         ) : displayUsers.length === 0 ? (
+//           <div className="p-6 text-center text-gray-600">No users found.</div>
+//         ) : (
+//           <div className="overflow-x-auto overflow-y-auto ">
+//             <table className="w-full table-auto text-left">
+//               <thead>
+//                 <tr className="bg-gray-100">
+//                   <th className="user-table-header py-2 px-4 font-bold text-gray-800 text-left">#</th>
+//                   <th className="user-table-header py-2 px-4 font-bold text-gray-800 text-left">Name / Email</th>
+//                   <th className="user-table-header py-2 px-4 font-bold text-gray-800 text-right">Status</th>
+//                   <th className="user-table-header py-2 px-4 text-center">Actions</th>
+//                 </tr>
+//               </thead>
+
+//               <tbody>
+//                 {displayUsers.map((u, index) => (
+//                   <tr
+//                     key={u._id || index}
+//                     className={`border-b border-gray-200 cursor-pointer transition-colors hover:bg-blue-50/60 ${
+//                       selectedUser?._id === u._id ? "bg-blue-50 border-blue-300" : ""
+//                     }`}
+//                     onClick={(e) => handleRowClick(u, e)}
+//                   >
+//                     <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4">{index + 1}</td>
+//                     <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4">
+//                       <div className="font-medium">{u.name || u.email}</div>
+//                       <div className="text-sm text-gray-500">{u.email}</div>
+//                     </td>
+//                     <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4 text-left">
+//                       <span
+//                         className={`inline-block px-3 py-1 rounded text-xs font-semibold ${
+//                           u.isActive ? "bg-green-100 text-green-800 border border-green-300" : "bg-red-100 text-red-800 border border-red-300"
+//                         }`}
+//                       >
+//                         {u.isActive ? "Active" : "Inactive"}
+//                       </span>
+//                     </td>
+//                     <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4">
+//                       <div className="flex justify-center gap-2 sm:gap-3" onClick={(e) => e.stopPropagation()}>
+//                         <button onClick={() => handleEditOpen(u._id)} className="user-action-btn rounded-full border border-green-500/50 bg-white flex items-center justify-center hover:bg-green-50 w-8 h-8">
+//                           <Pencil className="text-green-600 user-action-icon" size={16} />
+//                         </button>
+//                         <button onClick={() => handleDeleteOpen(u.email, u._id)} className="user-action-btn rounded-full border border-red-500/50 bg-white flex items-center justify-center hover:bg-red-50 w-8 h-8">
+//                           <Trash className="text-red-600 user-action-icon" size={16} />
+//                         </button>
+//                       </div>
+//                     </td>
+//                   </tr>
+//                 ))}
+//               </tbody>
+//             </table>
+//           </div>
+//         )}
+//       </div>
+
+//       {ManagerDeleteModalOpen && <UserDeleteModal userEmail={userEmail} handleClose={handleDeleteClose} handleDelete={handleDelete} />}
+//       {ManagerEditModalOpen && <UserEditModal handleClose={handleEditClose} id={userId} />}
+//     </>
+//   );
+// };
+
+// export default UserList;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // src/pages/UserManagement/UserList.jsx
+// import { Pencil, Trash } from "lucide-react";
+// import { useEffect, useState } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+// import { DeleteManager, fetchAllManagers, setManagerDeleteModalOpen, setManagerEditModalOpen } from "../../slices/ManagerSlice";
+// import Swal from "sweetalert2";
+// import "../../styles/pages/management-pages.css";
+// import UserDeleteModal from "../../components/Modals/UserManagement/DeleteModal";
+// import UserEditModal from "../../components/Modals/UserManagement/EditModal";
+
+// const UserList = ({ onUserSelect, selectedUser }) => {
+//   const [userEmail, setUserEmail] = useState("");
+//   const [userId, setUserId] = useState(null);
+
+//   const dispatch = useDispatch();
+//   const { Managers, ManagerDeleteModalOpen, ManagerEditModalOpen, isLoading, error } =
+//     useSelector((state) => state.Manager);
+
+//   useEffect(() => {
+//     dispatch(fetchAllManagers());
+//   }, [dispatch]);
+
+//   const handleDeleteOpen = (email, id) => {
+//     dispatch(setManagerDeleteModalOpen(true));
+//     setUserEmail(email);
+//     setUserId(id);
+//   };
+
+//   const handleDeleteClose = () => {
+//     dispatch(setManagerDeleteModalOpen(false));
+//     setUserEmail("");
+//     setUserId(null);
+//   };
+
+//   const handleEditOpen = (id) => {
+//     dispatch(setManagerEditModalOpen(true));
+//     setUserId(id);
+//   };
+
+//   const handleEditClose = () => {
+//     dispatch(setManagerEditModalOpen(false));
+//     setUserId(null);
+//   };
+
+//   const handleDelete = async () => {
+//     try {
+//       const id = userId;
+//       const deletedId = await dispatch(DeleteManager(id)).unwrap();
+//       // success
+//       Swal.fire({
+//         icon: "success",
+//         title: "Deleted",
+//         text: "User deleted",
+//       });
+//       dispatch(setManagerDeleteModalOpen(false));
+//       // no need to re-fetch — reducer already removed the user
+//     } catch (err) {
+//       Swal.fire({
+//         icon: "error",
+//         title: "Error",
+//         text: err || "Failed to delete user",
+//       });
+//     }
+//   };
+
+//   const handleRowClick = (user, e) => {
+//     e.stopPropagation();
+//     onUserSelect && onUserSelect(user);
+//   };
+
+
+
+//   // NEW: Toggle active/inactive with SweetAlert + thunk
+//   const handleToggleStatus = async (user) => {
+//     if (!user || !user._id) return;
+
+//     // If user is active -> we want to suspend (ask for reason)
+//     if (user.isActive) {
+//       const { value: formValues, isConfirmed } = await Swal.fire({
+//         title: `Suspend ${user.email || user.name}?`,
+//         html:
+//           '<textarea id="swal-suspension-reason" class="swal2-textarea" placeholder="Enter suspension reason"></textarea>',
+//         icon: "warning",
+//         showCancelButton: true,
+//         confirmButtonText: "Suspend",
+//         cancelButtonText: "Cancel",
+//         preConfirm: () => {
+//           const reason = document.getElementById("swal-suspension-reason")?.value?.trim();
+//           if (!reason) {
+//             Swal.showValidationMessage("Suspension reason is required");
+//             return false;
+//           }
+//           return { suspensionReason: reason };
+//         },
+//         allowOutsideClick: () => !Swal.isLoading(),
+//       });
+
+//       if (!isConfirmed) return;
+
+//       const suspensionReason = formValues.suspensionReason;
+
+//       try {
+//         Swal.fire({ title: "Suspending...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+//         await dispatch(UpdateManagerStatus({ id: user._id, isActive: false, suspensionReason })).unwrap();
+//         Swal.fire({ icon: "success", title: "Suspended", text: `${user.email || user.name} is suspended.` });
+//         // refresh list to pick up new status
+//         dispatch(fetchAllManagers());
+//       } catch (err) {
+//         console.error("UpdateManagerStatus error:", err);
+//         Swal.fire({ icon: "error", title: "Failed", text: err || "Could not suspend user" });
+//       }
+//     } else {
+//       // If user is inactive -> activate (simple confirm)
+//       const result = await Swal.fire({
+//         title: `Activate ${user.email || user.name}?`,
+//         text: "This will restore the user's active status.",
+//         icon: "question",
+//         showCancelButton: true,
+//         confirmButtonText: "Activate",
+//         cancelButtonText: "Cancel",
+//       });
+//       if (!result.isConfirmed) return;
+
+//       try {
+//         Swal.fire({ title: "Activating...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+//         await dispatch(UpdateManagerStatus({ id: user._id, isActive: true, suspensionReason: "" })).unwrap();
+//         Swal.fire({ icon: "success", title: "Activated", text: `${user.email || user.name} is now active.` });
+//         dispatch(fetchAllManagers());
+//       } catch (err) {
+//         console.error("UpdateManagerStatus error:", err);
+//         Swal.fire({ icon: "error", title: "Failed", text: err || "Could not activate user" });
+//       }
+//     }
+//   };
+
+//   const displayUsers = Managers && Managers.length > 0 ? Managers : [];
+
+//   return (
+//     <>
+//       <div 
+//       className="ListPage user-list-container bg-white rounded-xl shadow-sm w-full h-full border border-[#E5E7EB]">
+//         <h1 className="user-list-title font-semibold text-gray-800 mb-4">User Management</h1>
+
+//         <div className="mb-4">
+//           <h2 className="user-list-header text-center font-semibold text-gray-800">User List</h2>
+//           <div className="mx-auto mt-2 h-px w-4/5 bg-[#2563EB]/40"></div>
+//         </div>
+
+//         {isLoading ? (
+//           <div className="p-6 text-center">Loading users...</div>
+//         ) : error ? (
+//           <div className="p-6 text-center text-red-600">Error: {error}</div>
+//         ) : displayUsers.length === 0 ? (
+//           <div className="p-6 text-center text-gray-600">No users found.</div>
+//         ) : (
+//           <div className="user-table-scroll overflow-y-auto pr-1">
+//             <table className="w-full table-auto text-left">
+//               <thead>
+//                 <tr className="bg-gray-100">
+//                   <th className="user-table-header py-2 px-4 font-bold text-gray-800 text-left">#</th>
+//                   <th className="user-table-header py-2 px-4 font-bold text-gray-800 text-left">Name / Email</th>
+//                   <th className="user-table-header py-2 px-4 font-bold text-gray-800 text-right">Status</th>
+//                   <th className="user-table-header py-2 px-4 text-center">Actions</th>
+//                 </tr>
+//               </thead>
+
+//               <tbody>
+//                 {displayUsers.map((u, index) => (
+//                   <tr
+//                     key={u._id || index}
+//                     className={`border-b border-gray-200 cursor-pointer transition-colors hover:bg-blue-50/60 ${
+//                       selectedUser?._id === u._id ? "bg-blue-50 border-blue-300" : ""
+//                     }`}
+//                     onClick={(e) => handleRowClick(u, e)}
+//                   >
+//                     <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4">{index + 1}</td>
+//                     <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4">
+//                       <div className="font-medium">{u.name || u.email}</div>
+//                       <div className="text-sm text-gray-500">{u.email}</div>
+//                     </td>
+//                     <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4 text-left">
+//                       <span
+//                         className={`inline-block px-3 py-1 rounded text-xs font-semibold ${
+//                           u.isActive ? "bg-green-100 text-green-800 border border-green-300" : "bg-red-100 text-red-800 border border-red-300"
+//                         }`}
+//                       >
+//                         {u.isActive ? "Active" : "Inactive"}
+//                       </span>
+//                     </td>
+//                     <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4">
+//                       <div className="flex justify-center gap-2 sm:gap-3" onClick={(e) => e.stopPropagation()}>
+//                         <button onClick={() => handleEditOpen(u._id)} className="user-action-btn rounded-full border border-green-500/50 bg-white flex items-center justify-center hover:bg-green-50 w-8 h-8">
+//                           <Pencil className="text-green-600 user-action-icon" size={16} />
+//                         </button>
+//                         <button onClick={() => handleDeleteOpen(u.email, u._id)} className="user-action-btn rounded-full border border-red-500/50 bg-white flex items-center justify-center hover:bg-red-50 w-8 h-8">
+//                           <Trash className="text-red-600 user-action-icon" size={16} />
+//                         </button>
+//                       </div>
+//                     </td>
+//                   </tr>
+//                 ))}
+//               </tbody>
+//             </table>
+//           </div>
+//         )}
+//       </div>
+
+//       {ManagerDeleteModalOpen && <UserDeleteModal userEmail={userEmail} handleClose={handleDeleteClose} handleDelete={handleDelete} />}
+//       {ManagerEditModalOpen && <UserEditModal handleClose={handleEditClose} id={userId} />}
+//     </>
+//   );
+// };
+
+// export default UserList;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// src/pages/UserManagement/UserList.jsx
+import { Pencil, Trash } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  DeleteManager,
+  fetchAllManagers,
+  setManagerDeleteModalOpen,
+  setManagerEditModalOpen,
+  UpdateManagerStatus, // <- import the thunk
+} from "../../slices/ManagerSlice";
+import Swal from "sweetalert2";
+import "../../styles/pages/management-pages.css";
+import UserDeleteModal from "../../components/Modals/UserManagement/DeleteModal";
+import UserEditModal from "../../components/Modals/UserManagement/EditModal";
+
+const UserList = ({ onUserSelect, selectedUser }) => {
+  const [userEmail, setUserEmail] = useState("");
+  const [userId, setUserId] = useState(null);
+
+  const dispatch = useDispatch();
+  const { Managers, ManagerDeleteModalOpen, ManagerEditModalOpen, isLoading, error } =
+    useSelector((state) => state.Manager);
+
+  useEffect(() => {
+    dispatch(fetchAllManagers());
+  }, [dispatch]);
+
+  const handleDeleteOpen = (email, id) => {
+    dispatch(setManagerDeleteModalOpen(true));
+    setUserEmail(email);
+    setUserId(id);
+  };
+
+  const handleDeleteClose = () => {
+    dispatch(setManagerDeleteModalOpen(false));
+    setUserEmail("");
+    setUserId(null);
+  };
+
+  const handleEditOpen = (id) => {
+    dispatch(setManagerEditModalOpen(true));
+    setUserId(id);
+  };
+
+  const handleEditClose = () => {
+    dispatch(setManagerEditModalOpen(false));
+    setUserId(null);
+  };
+
+  const handleDelete = async () => {
+    try {
+      const id = userId;
+      const deletedId = await dispatch(DeleteManager(id)).unwrap();
+      // success
+      Swal.fire({
+        icon: "success",
+        title: "Deleted",
+        text: "User deleted",
+      });
+      dispatch(setManagerDeleteModalOpen(false));
+      // no need to re-fetch — reducer already removed the user
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: err || "Failed to delete user",
+      });
+    }
+  };
+
+  const handleRowClick = (user, e) => {
+    e.stopPropagation();
+    onUserSelect && onUserSelect(user);
+  };
+
+  // NEW: Toggle active/inactive with SweetAlert + thunk
+  const handleToggleStatus = async (user) => {
+    if (!user || !user._id) return;
+
+    // If user is active -> we want to suspend (ask for reason)
+    if (user.isActive) {
+      const { value: formValues, isConfirmed } = await Swal.fire({
+        title: `Suspend ${user.email || user.name}?`,
+        html:
+          '<textarea id="swal-suspension-reason" class="swal2-textarea" placeholder="Enter suspension reason"></textarea>',
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Suspend",
+        cancelButtonText: "Cancel",
+        preConfirm: () => {
+          const reason = document.getElementById("swal-suspension-reason")?.value?.trim();
+          if (!reason) {
+            Swal.showValidationMessage("Suspension reason is required");
+            return false;
+          }
+          return { suspensionReason: reason };
+        },
+        allowOutsideClick: () => !Swal.isLoading(),
+      });
+
+      if (!isConfirmed) return;
+
+      const suspensionReason = formValues.suspensionReason;
+
+      try {
+        Swal.fire({ title: "Suspending...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        await dispatch(UpdateManagerStatus({ id: user._id, isActive: false, suspensionReason })).unwrap();
+        Swal.fire({ icon: "success", title: "Suspended", text: `${user.email || user.name} is suspended.` });
+        // refresh list to pick up new status
+        dispatch(fetchAllManagers());
+      } catch (err) {
+        console.error("UpdateManagerStatus error:", err);
+        Swal.fire({ icon: "error", title: "Failed", text: err || "Could not suspend user" });
+      }
+    } else {
+      // If user is inactive -> activate (simple confirm)
+      const result = await Swal.fire({
+        title: `Activate ${user.email || user.name}?`,
+        text: "This will restore the user's active status.",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonText: "Activate",
+        cancelButtonText: "Cancel",
+      });
+      if (!result.isConfirmed) return;
+
+      try {
+        Swal.fire({ title: "Activating...", allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        await dispatch(UpdateManagerStatus({ id: user._id, isActive: true, suspensionReason: "" })).unwrap();
+        Swal.fire({ icon: "success", title: "Activated", text: `${user.email || user.name} is now active.` });
+        dispatch(fetchAllManagers());
+      } catch (err) {
+        console.error("UpdateManagerStatus error:", err);
+        Swal.fire({ icon: "error", title: "Failed", text: err || "Could not activate user" });
+      }
+    }
+  };
+
+  const displayUsers = Managers && Managers.length > 0 ? Managers : [];
+
+  return (
+    <>
+      <div className="ListPage user-list-container bg-white rounded-xl shadow-sm w-full h-full border border-[#E5E7EB]">
+        <h1 className="user-list-title font-semibold text-gray-800 mb-4">User Management</h1>
+
+        <div className="mb-4">
+          <h2 className="user-list-header text-center font-semibold text-gray-800">User List</h2>
+          <div className="mx-auto mt-2 h-px w-4/5 bg-[#2563EB]/40"></div>
+        </div>
+
+        {isLoading ? (
+          <div className="p-6 text-center">Loading users...</div>
+        ) : error ? (
+          <div className="p-6 text-center text-red-600">Error: {error}</div>
+        ) : displayUsers.length === 0 ? (
+          <div className="p-6 text-center text-gray-600">No users found.</div>
+        ) : (
+          <div className="user-table-scroll h-[65vh] overflow-y-auto pr-1">
+            <table className="w-full table-auto text-left">
+              <thead>
+                <tr className="bg-gray-100">
+                  <th className="user-table-header py-2 px-4 font-bold text-gray-800 text-left">#</th>
+                  <th className="user-table-header py-2 px-4 font-bold text-gray-800 text-left">Name / Email</th>
+                  <th className="user-table-header py-2 px-4 font-bold text-gray-800 text-right">Status</th>
+                  <th className="user-table-header py-2 px-4 text-center">Actions</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {displayUsers.map((u, index) => (
+                  <tr
+                    key={u._id || index}
+                    className={`border-b border-gray-200 cursor-pointer transition-colors hover:bg-blue-50/60 ${
+                      selectedUser?._id === u._id ? "bg-blue-50 border-blue-300" : ""
+                    }`}
+                    onClick={(e) => handleRowClick(u, e)}
+                  >
+                    <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4">{index + 1}</td>
+                    <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4">
+                      <div className="font-medium">{u.name || u.email}</div>
+                      <div className="text-sm text-gray-500">{u.email}</div>
+                    </td>
+
+                    <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4 text-left">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleToggleStatus(u);
+                        }}
+                        className={`inline-block px-3 py-1 rounded text-xs font-semibold focus:outline-none ${
+                          u.isActive ? "bg-green-100 text-green-800 border border-green-300" : "bg-red-100 text-red-800 border border-red-300"
+                        }`}
+                        title={u.isActive ? "Click to suspend" : "Click to activate"}
+                      >
+                        {u.isActive ? "Active" : "Inactive"}
+                      </button>
+                    </td>
+
+                    <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4">
+                      <div className="flex justify-center gap-2 sm:gap-3" onClick={(e) => e.stopPropagation()}>
+                        <button onClick={() => handleEditOpen(u._id)} className="user-action-btn rounded-full border border-green-500/50 bg-white flex items-center justify-center hover:bg-green-50 w-8 h-8">
+                          <Pencil className="text-green-600 user-action-icon" size={16} />
+                        </button>
+                        <button onClick={() => handleDeleteOpen(u.email, u._id)} className="user-action-btn rounded-full border border-red-500/50 bg-white flex items-center justify-center hover:bg-red-50 w-8 h-8">
+                          <Trash className="text-red-600 user-action-icon" size={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {ManagerDeleteModalOpen && <UserDeleteModal userEmail={userEmail} handleClose={handleDeleteClose} handleDelete={handleDelete} />}
+      {ManagerEditModalOpen && <UserEditModal handleClose={handleEditClose} id={userId} />}
+    </>
+  );
+};
+
+export default UserList;

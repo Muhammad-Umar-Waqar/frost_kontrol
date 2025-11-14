@@ -1,0 +1,91 @@
+
+import React, { useState } from 'react';
+import "../../styles/pages/Dashboard/leftSide-BelowCharts.css"
+
+//   REMOVED: Example data - now using props from dashboard
+// const maintenanceItems = [...]
+
+export default function MaintenanceList({ items = [] }) { //   CHANGED: Accept items prop with default
+  
+  const [expandedItems, setExpandedItems] = useState(new Set());
+
+  const toggleExpand = (id) => {
+    const newExpandedItems = new Set(expandedItems);
+    if (newExpandedItems.has(id)) {
+      newExpandedItems.delete(id);
+    } else {
+      newExpandedItems.add(id);
+    }
+    setExpandedItems(newExpandedItems);
+  };
+
+  return (
+    <div className="w-full">
+      {/* Header */}
+      <div className="flex items-center justify-center mb-3 gap-2">
+        <img 
+          src="/Refrigerator-icon.png" 
+          alt="Alert" 
+          className="w-6 h-6 rounded-full"
+        />
+        <h2 className="text-lg font-semibold text-[#1E40AF] text-center" style={{fontFamily: 'Poppins', fontWeight: 600}}>Refrigerator Alert</h2>
+      </div>
+
+      <div className="h-0.5 w-full mb-3" style={{backgroundColor: '#07518D'}}></div>
+
+      {/* List of maintenance items */}
+      <div className="space-y-0.5 h-[230px] overflow-y-auto custom-scrollbar pr-2 pb-2">
+        {/*   CHANGED: Show message when no maintenance items */}
+        {items.length === 0 ? (
+          <div className="text-center py-4 text-[#64748B]">
+            🎉 No maintenance required! All devices are operating normally.
+          </div>
+        ) : (
+          items.map((item) => ( 
+            <div key={item.id}>
+              <div
+                className="flex items-center justify-between py-1.5 cursor-pointer"
+                onClick={() => toggleExpand(item.id)}
+              >
+                <div className="flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`lucide lucide-chevron-down text-[#E5E7EB]/60 mr-2 transition-transform duration-200 ${expandedItems.has(item.id) ? 'rotate-180' : ''}`}>
+                    <path d="m6 9 6 6 6-6"/>
+                  </svg>
+                  <span className="text-[#1E293B] font-medium text-sm">{item.name}</span>
+                </div>
+                <div className="icon-number-align">
+                  <img 
+                    src="/alert-icon.png" 
+                    alt="Alert" 
+                    className="w-4 h-4 mr-1"
+                  />
+                  <span className="text-[#1E293B] text-sm font-medium">{item.devices}</span>
+                </div>
+              </div>
+
+              {expandedItems.has(item.id) && item.nestedItems && (
+                <div className="pl-6 space-y-1 mt-1">
+                  {item.nestedItems.map(nestedItem => (
+                    <div key={nestedItem.id} className="flex items-center justify-between py-0.5">
+                      <div className="flex items-center">
+                        <img 
+                          src="/alert-icon.png" 
+                          alt="Alert" 
+                          className="w-4 h-4 mr-2"
+                        />
+                        <span className="text-[#1E293B] text-sm font-medium">{nestedItem.name}</span>
+                      </div>
+                      {nestedItem.date && (
+                        <span className="text-[#64748B] text-sm">{nestedItem.date}</span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}

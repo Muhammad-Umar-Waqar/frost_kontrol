@@ -1,0 +1,151 @@
+// import React, { useState } from 'react';
+// import { Box } from 'lucide-react';
+// import { useSelector } from 'react-redux';
+
+// import "../../styles/pages/management-pages.css"
+
+// const AddVenue = () => {
+//   const [venueName, setVenueName] = useState('');
+//   const handleVenue = () => {
+//     // Backend developer will implement logic here
+//   };
+
+//   return (
+//     <div
+//       className="AddingPage venue-add-container rounded-xl shadow-sm w-full flex flex-col justify-center bg-[#EEF3F9] border border-[#E5E7EB]"
+//     >
+//       <h2 className="venue-add-title font-semibold mb-1 text-center">Add Venues</h2>
+//       <p className="venue-add-subtitle text-gray-500 mb-6 text-center">Welcome back! Select method to add venue</p>
+
+//       <div className="space-y-4 max-w-sm mx-auto w-full">
+//         <div className="relative bg-white">
+//           <Box className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+//           <input
+//             type="text"
+//             name="venueName"
+//             placeholder="Enter your venue"
+//             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+//             value={venueName}
+//             onChange={(e) => setVenueName(e.target.value)}
+//           />
+//         </div>
+
+//         <button
+//           onClick={handleVenue}
+//           className="w-full bg-[#1E64D9] hover:bg-[#1557C7] cursor-pointer text-white font-semibold py-2.5 px-4 rounded-md transition duration-300 shadow-md"
+//         >
+//           Save
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default AddVenue;
+
+
+
+
+
+
+
+
+
+// src/pages/management/AddVenue.jsx
+import React, { useState, useEffect } from "react";
+import { Box } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import Swal from "sweetalert2";
+import InputField from "../../components/Inputs/InputField";
+import { createVenue, fetchAllVenues } from "../../slices/VenueSlice";
+import { fetchAllOrganizations } from "../../slices/OrganizationSlice"; // ensure OrganizationSlice exists
+
+import "../../styles/pages/management-pages.css";
+
+const AddVenue = () => {
+  const [form, setForm] = useState({ name: "", organization: "" });
+  const dispatch = useDispatch();
+  const { isLoading } = useSelector((s) => s.Venue || { isLoading: false });
+  const { Organizations } = useSelector((s) => s.Organization || { Organizations: [] });
+
+  useEffect(() => {
+    // ensure organizations are loaded for the select dropdown
+    if (!Organizations || Organizations.length === 0) {
+      dispatch(fetchAllOrganizations());
+    }
+  }, [dispatch]);
+
+  const onchange = (e) => {
+    const { name, value } = e.target;
+    setForm((p) => ({ ...p, [name]: value }));
+  };
+
+  const handleVenue = async (e) => {
+    e.preventDefault();
+    const name = (form.name || "").trim();
+    const organization = form.organization;
+
+    if (!name || !organization) {
+      return Swal.fire({ icon: "warning", title: "Missing field", text: "Name and organization are required." });
+    }
+
+    try {
+      const created = await dispatch(createVenue({ name, organization })).unwrap();
+      Swal.fire({ icon: "success", title: "Created", text: `Venue "${created.name}" created.` });
+      setForm({ name: "", organization: "" });
+      // refresh list
+      dispatch(fetchAllVenues());
+    } catch (err) {
+      Swal.fire({ icon: "error", title: "Create failed", text: err || "Unable to create venue." });
+      console.error("create venue error:", err);
+    }
+  };
+
+  return (
+    <div className="AddingPage venue-add-container rounded-xl shadow-sm w-full flex flex-col justify-center bg-[#EEF3F9] border border-[#E5E7EB]">
+      <h2 className="venue-add-title font-semibold mb-1 text-center">Add Venues</h2>
+      <p className="venue-add-subtitle text-gray-500 mb-6 text-center">Welcome back! Select method to add venue</p>
+
+      <form className="space-y-4 max-w-sm mx-auto w-full" onSubmit={handleVenue}>
+        <div className="relative bg-white">
+          <Box className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+          <input
+            type="text"
+            name="name"
+            placeholder="Enter venue name"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={form.name}
+            onChange={onchange}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">Organization</label>
+          <select
+            name="organization"
+            value={form.organization}
+            onChange={onchange}
+            className="w-full border rounded-md px-3 py-2"
+          >
+            <option value="">Select Organization</option>
+            {Organizations?.map((o) => (
+              <option key={o._id || o.id} value={o._id || o.id}>
+                {o.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          className={`w-full bg-[#1E64D9] hover:bg-[#1557C7] text-white font-semibold py-2.5 px-4 rounded-md transition duration-300 shadow-md ${isLoading ? "opacity-70 cursor-not-allowed" : ""}`}
+          disabled={isLoading}
+        >
+          {isLoading ? "Saving..." : "Save"}
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default AddVenue;
