@@ -1,12 +1,26 @@
-# React + Vite
+# FrostKontrol
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+FrostKontrol is a real-time monitoring web application designed to display the live temperatures and battery alerts of devices. Using WebSockets for live temperature updates, this application allows users to stay informed about the status of their connected devices.
 
-Currently, two official plugins are available:
+## Features
+- **Real-time Temperature Monitoring**: Displays the live temperature of connected devices with real-time updates using WebSockets.
+- **Battery Alerts**: Notifies users when the battery level of devices falls below a predefined threshold.
+- **Device Management**: Allows monitoring of multiple devices and their respective data points, such as temperature and battery levels.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Tech Stack
+- **Frontend**: React.js
+- **Backend**: Node.js with Express.js
+- **Database**: MongoDB
+- **Real-time Communication**: WebSockets (via Socket.io)
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### Prerequisites
+Ensure that you have the following installed on your local machine:
+- [Node.js](https://nodejs.org/en/) (LTS version recommended)
+- [MongoDB](https://www.mongodb.com/try/download/community) (or use a cloud MongoDB service like Atlas)
+
+### Clone the Repository
+```bash
+git clone https://github.com/Muhammad-Umar-Waqar/frostkontrol.git
+cd frostkontrol
