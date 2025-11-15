@@ -3355,6 +3355,15 @@ export default function Dashboard() {
 
   // Admin: when org changes, reset venue selection (keeps URL clean)
   const onOrganizationChange = (id) => {
+
+     const orgId = id || user?.organization;
+
+  // If org hasn't changed, don't clear the venue or modify URL
+  if (orgId && String(orgId) === String(selectedOrgId)) {
+    return;
+  }
+
+  
     setSelectedOrgId(id || user?.organization)
     setSelectedVenueId("")
     // remove ?venue from URL

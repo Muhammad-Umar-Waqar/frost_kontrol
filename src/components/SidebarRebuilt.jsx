@@ -75,7 +75,7 @@ import { useStore } from "../contexts/storecontexts" // adjust path if different
 const BASE = import.meta.env.VITE_BACKEND_API || "http://localhost:5050"
 
 const Icon = ({ src, alt, active, blueSrc }) => (
-  <img src={src} alt={alt} width={24} height={24} className="" />
+  <img src={src} alt={alt} width={24} height={24} className="imageClassForActiveandHover" />
 )
 
 
