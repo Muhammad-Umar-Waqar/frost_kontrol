@@ -3389,7 +3389,7 @@ export default function Dashboard() {
     return (
       <div className="flex w-full flex-row h-full bg-gray-100 font-inter rounded-md overflow-hidden">
         <div className="flex justify-center items-center w-full h-64">
-          <div className="text-lg text-gray-600">Loading organizations...</div>
+          {/* <div className="text-lg text-gray-600">Loading organizations...</div> */}
         </div>
       </div>
     )
@@ -3399,8 +3399,7 @@ export default function Dashboard() {
     return (
       <div className="flex w-full flex-col lg:flex-row h-full bg-gray-100  font-inter rounded-md overflow-hidden">
         <div className="flex flex-col justify-center items-center w-full h-64 space-y-4">
-          <div className="text-lg text-red-600">Error: {error}</div>
-          <button onClick={() => { /* try refetch */ window.location.reload() }} className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mt-2">Retry</button>
+          {/* <div className="text-lg text-red-600">Error: {error}</div> */}
         </div>
       </div>
     )
@@ -3497,7 +3496,7 @@ export default function Dashboard() {
                 ambientTemperature={selected?.FreezerData?.temperature ?? 0}
                 batteryLow={selected?.batteryLow ?? selected?.batteryAlert ?? false}
                 needMaintenance={selected?.batteryLow ?? false}
-                apiKey="8dbf5d2a37c4178b4b03e6c49ae3f9e7"
+                apiKey={selected?.apiKey}
                 chartData={[]}
                 organizationId={selectedOrgId}
               />
@@ -3506,8 +3505,8 @@ export default function Dashboard() {
         ) : (
           <VenueDetailsPanel
             venueName="Karim Korangi Branch"
-            freezerTemperature={-4}
-            ambientTemperature={25}
+            freezerTemperature={0}
+            ambientTemperature={0}
             batteryLow={true}
             needMaintenance={true}
             apiKey="8dbf5d2a37c4178b4b03e6c49ae3f9e7"

@@ -202,7 +202,7 @@ const AddOrganization = () => {
           type="submit"
           onClick={handleSubmit}
           disabled={isLoading}
-          className={`w-full bg-[#1E64D9] hover:bg-[#1557C7] text-white font-semibold py-2.5 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 ${
+          className={`w-full bg-[#1E64D9] hover:bg-[#1557C7] text-white font-semibold py-2.5 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 cursor-pointer ${
             isLoading ? "opacity-70 cursor-not-allowed" : ""
           }`}
         >

@@ -213,6 +213,8 @@ import Swal from "sweetalert2";
 import { fetchAllVenues, updateVenue, deleteVenue } from "../../slices/VenueSlice";
 import { useDispatch, useSelector } from "react-redux";
 import "../../styles/pages/management-pages.css";
+import TableSkeleton from "../../components/skeletons/TableSkeleton";
+
 
 const VenueList = ({ onVenueSelect, selectedVenue }) => {
   const dispatch = useDispatch();
@@ -293,7 +295,13 @@ const VenueList = ({ onVenueSelect, selectedVenue }) => {
 
         <div className="venue-table-scroll overflow-y-auto pr-1 h-[58vh]">
           {loading ? (
-            <div className="text-center py-4">Loading venues...</div>
+            <table className="w-full table-auto text-left">
+      <tbody aria-busy={loading} role="status">
+        <TableSkeleton rows={6} showNumber={true} showActions={true} />
+      </tbody>
+    </table>
+
+            // <div className="text-center py-4">Loading venues...</div>
           ) : error ? (
             <div className="text-center text-red-500 py-4">{error}</div>
           ) : Venues.length === 0 ? (
@@ -315,11 +323,11 @@ const VenueList = ({ onVenueSelect, selectedVenue }) => {
                       </td>
                       <td className="venue-table-cell py-2 sm:py-3 px-2 sm:px-4">
                         <div className="flex justify-center gap-2 sm:gap-3" onClick={(e) => e.stopPropagation()}>
-                          <button onClick={() => handleEdit(id, displayName)} className="venue-action-btn rounded-full border border-green-500/50 bg-white flex items-center justify-center hover:bg-green-50">
-                            <Pencil className="text-green-600 venue-action-icon" />
+                          <button onClick={() => handleEdit(id, displayName)} className=" cursor-pointer venue-action-btn rounded-full border border-green-500/50 bg-white flex items-center justify-center hover:bg-green-50">
+                            <Pencil className="text-green-600 venue-action-icon " />
                           </button>
-                          <button onClick={() => handleDelete(id, displayName)} className="venue-action-btn rounded-full border border-red-500/50 bg-white flex items-center justify-center hover:bg-red-50">
-                            <Trash className="text-red-600 venue-action-icon" />
+                          <button onClick={() => handleDelete(id, displayName)} className=" cursor-pointer venue-action-btn rounded-full border border-red-500/50 bg-white flex items-center justify-center hover:bg-red-50">
+                            <Trash className="text-red-600 venue-action-icon " />
                           </button>
                         </div>
                       </td>

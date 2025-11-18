@@ -738,6 +738,7 @@ import Swal from "sweetalert2";
 import "../../styles/pages/management-pages.css";
 import UserDeleteModal from "../../components/Modals/UserManagement/DeleteModal";
 import UserEditModal from "../../components/Modals/UserManagement/EditModal";
+import TableSkeleton from "../../components/skeletons/TableSkeleton";
 
 const UserList = ({ onUserSelect, selectedUser }) => {
   const [userEmail, setUserEmail] = useState("");
@@ -875,7 +876,12 @@ const UserList = ({ onUserSelect, selectedUser }) => {
         </div>
 
         {isLoading ? (
-          <div className="p-6 text-center">Loading users...</div>
+                  <table className="w-full table-auto text-left">
+                <tbody aria-busy={isLoading} role="status">
+                  <TableSkeleton rows={6} showNumber={true} showActions={true} status={true} />
+                </tbody>
+              </table>
+          // <div className="p-6 text-center">Loading users...</div>
         ) : error ? (
           <div className="p-6 text-center text-red-600">Error: {error}</div>
         ) : displayUsers.length === 0 ? (
@@ -885,7 +891,6 @@ const UserList = ({ onUserSelect, selectedUser }) => {
             <table className="w-full table-auto text-left">
               <thead>
                 <tr className="bg-gray-100">
-                  <th className="user-table-header py-2 px-4 font-bold text-gray-800 text-left">#</th>
                   <th className="user-table-header py-2 px-4 font-bold text-gray-800 text-left">Name / Email</th>
                   <th className="user-table-header py-2 px-4 font-bold text-gray-800 text-right">Status</th>
                   <th className="user-table-header py-2 px-4 text-center">Actions</th>
@@ -901,10 +906,9 @@ const UserList = ({ onUserSelect, selectedUser }) => {
                     }`}
                     onClick={(e) => handleRowClick(u, e)}
                   >
-                    <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4">{index + 1}</td>
                     <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4">
-                      <div className="font-medium">{u.name || u.email}</div>
-                      <div className="text-sm text-gray-500">{u.email}</div>
+                    <div className="font-medium">{u.name || u.email}</div>
+                      {/* <div className="text-sm text-gray-500">{u.email}</div> */}
                     </td>
 
                     <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4 text-left">

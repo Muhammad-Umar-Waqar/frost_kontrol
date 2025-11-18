@@ -263,10 +263,18 @@ export default function VenueDetailsPanel({
       {/* B. Refrigerator Image */}
       <div className="relative w-full overflow-hidden mb-4">
         <img
-          src="/refrigerator image.png"
+          src="/ambient_freezer.svg"
           alt="Refrigerator"
           className="w-full h-auto object-cover"
         />
+        <div className="flex flex-col items-center justify-center absolute top-[30%] left-[8%] ">
+      <h1 className="font-bold text-white text-lg">Freezer</h1>
+      <h1 className="font-bold text-white text-lg">{freezerTemperature}<span className="font-thin text-white">°C</span></h1>
+        </div>
+        <div className="flex flex-col items-center justify-center absolute top-[30%] right-[15%]">
+      <h1 className="font-bold text-[#07518D] text-lg">Ambient</h1>
+      <h1 className="font-bold text-[#07518D]  text-lg">{ambientTemperature}<span className="text-lg font-thin">°C</span></h1>
+        </div>
       </div>
 
       {/* C. Temperature Section */}
@@ -311,6 +319,9 @@ export default function VenueDetailsPanel({
             No alert data available
           </p>
         )}
+      </div>
+      <div>
+        
       </div>
     </div>
   );

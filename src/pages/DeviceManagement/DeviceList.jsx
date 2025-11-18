@@ -418,6 +418,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import { fetchAllDevices, updateDevice, deleteDevice } from "../../slices/DeviceSlice";
 import "../../styles/pages/management-pages.css";
+import TableSkeleton from "../../components/skeletons/TableSkeleton";
 
 const DeviceList = ({ onDeviceSelect, selectedDevice }) => {
   const dispatch = useDispatch();
@@ -620,9 +621,9 @@ const DeviceList = ({ onDeviceSelect, selectedDevice }) => {
         <table className="w-full table-auto text-left">
           <thead>
             <tr className="bg-gray-100">
-              <th className="py-2 px-4 font-bold text-gray-800">#</th>
+              {/* <th className="py-2 px-4 font-bold text-gray-800">#</th> */}
               <th className="py-2 px-4 font-bold text-gray-800">Device ID</th>
-              <th className="py-2 px-4 font-bold text-gray-800">Venue</th>
+              {/* <th className="py-2 px-4 font-bold text-gray-800">Venue</th> */}
               <th className="py-2 px-4 text-center">Actions</th>
             </tr>
           </thead>
@@ -631,7 +632,8 @@ const DeviceList = ({ onDeviceSelect, selectedDevice }) => {
         <div className="overflow-y-auto pr-1 user-table-scroll h-[60vh] ">
           <table className="w-full table-auto text-left">
             <tbody>
-              {isLoading && <tr><td className="p-4">Loading devices...</td></tr>}
+              {/* {isLoading && <tr><td className="p-4">Loading devices...</td></tr>} */}
+              {isLoading && <TableSkeleton/>}
 
               {!isLoading && displayDevices.map((d, idx) => {
                 const id = d._id ?? idx;
@@ -646,9 +648,9 @@ const DeviceList = ({ onDeviceSelect, selectedDevice }) => {
                     }`}
                     onClick={(e) => { e.stopPropagation(); onDeviceSelect?.(d); }}
                   >
-                    <td className="py-2 sm:py-3 px-2 sm:px-4">{idx + 1}</td>
+                    {/* <td className="py-2 sm:py-3 px-2 sm:px-4">{idx + 1}</td> */}
                     <td className="py-2 sm:py-3 px-2 sm:px-4">{deviceIdDisplay}</td>
-                    <td className="py-2 sm:py-3 px-2 sm:px-4">{venueName}</td>
+                    {/* <td className="py-2 sm:py-3 px-2 sm:px-4">{venueName}</td> */}
                     <td className="py-2 sm:py-3 px-2 sm:px-4">
                       <div className="flex justify-center gap-2 sm:gap-3" onClick={(e) => e.stopPropagation()}>
                         <button

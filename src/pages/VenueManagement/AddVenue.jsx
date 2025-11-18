@@ -59,6 +59,11 @@ import Swal from "sweetalert2";
 import InputField from "../../components/Inputs/InputField";
 import { createVenue, fetchAllVenues } from "../../slices/VenueSlice";
 import { fetchAllOrganizations } from "../../slices/OrganizationSlice"; // ensure OrganizationSlice exists
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+
+
 
 import "../../styles/pages/management-pages.css";
 
@@ -67,6 +72,25 @@ const AddVenue = () => {
   const dispatch = useDispatch();
   const { isLoading } = useSelector((s) => s.Venue || { isLoading: false });
   const { Organizations } = useSelector((s) => s.Organization || { Organizations: [] });
+
+
+  // constants (put near top of component)
+const SELECT_HEIGHT = 48;
+const ITEM_HEIGHT = 48;
+const VISIBLE_ITEMS = 4;
+
+const menuProps = {
+  PaperProps: {
+    sx: {
+      maxHeight: ITEM_HEIGHT * VISIBLE_ITEMS,
+      mt: 1,
+    },
+  },
+  MenuListProps: {
+    disablePadding: true,
+  },
+};
+
 
   useEffect(() => {
     // ensure organizations are loaded for the select dropdown
@@ -120,7 +144,7 @@ const AddVenue = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1">Organization</label>
+          {/* <label className="block text-sm font-medium mb-1">Organization</label>
           <select
             name="organization"
             value={form.organization}
@@ -133,7 +157,56 @@ const AddVenue = () => {
                 {o.name}
               </option>
             ))}
-          </select>
+          </select> */}
+
+          {/* UI */}
+<label className="block text-sm font-medium mb-1">Select Organization</label>
+
+{/* wrap only the select area so absolute positioning is relative to the select */}
+    <div className="relative">
+      {/* icon centered vertically relative to the select input */}
+      <img
+        src="/OrganizationChecklist.svg"
+        alt="org icon"
+        className="absolute left-3 top-1/2 -translate-y-1/2 z-30 h-[25px] w-[25px] pointer-events-none"
+      />
+
+      <FormControl fullWidth>
+        <Select
+          displayEmpty
+          value={form.organization}
+          onChange={onchange}
+          inputProps={{ name: "organization" }}
+          MenuProps={menuProps}
+          renderValue={(selected) => {
+            if (!selected) return <span className="text-gray-500">Select Organization</span>;
+            const org = Organizations?.find((o) => (o._id ?? o.id) === selected);
+            return org?.name ?? selected;
+          }}
+          sx={{
+            pl: "1.5rem",               // space for the icon
+            height: `${SELECT_HEIGHT}px`,
+            backgroundColor: "white",
+            borderRadius: "0.375rem",
+          }}
+        >
+          {(Organizations || []).length === 0 ? (
+            <MenuItem disabled sx={{ height: ITEM_HEIGHT }}>
+              No organizations found
+            </MenuItem>
+          ) : (
+            (Organizations || []).map((org) => {
+              const id = org._id ?? org.id;
+              return (
+                <MenuItem key={id} value={id} sx={{ height: ITEM_HEIGHT }}>
+                  {org.name}
+                </MenuItem>
+              );
+            })
+          )}
+        </Select>
+      </FormControl>
+    </div>
         </div>
 
         <button

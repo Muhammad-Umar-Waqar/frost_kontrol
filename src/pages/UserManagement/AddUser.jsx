@@ -304,6 +304,10 @@ import { fetchAllManagers } from "../../slices/ManagerSlice";
 import "../../styles/pages/management-pages.css";
 import { User } from "lucide-react";
 import Swal from "sweetalert2";
+// import { Building } from "lucide-react"; // add this with your icons
+import { FormControl, Select, MenuItem } from "@mui/material";
+
+
 
 const BASE = import.meta.env.VITE_BACKEND_API || "http://localhost:5050";
 
@@ -312,6 +316,24 @@ const AddUser = () => {
   const dispatch = useDispatch();
   const token = localStorage.getItem("token");
   const { Organizations = [] } = useSelector((state) => state.Organization || { Organizations: [] });
+
+  const SELECT_HEIGHT = 48;
+const ITEM_HEIGHT = 48;
+const VISIBLE_ITEMS = 4;
+
+const menuProps = {
+  PaperProps: {
+    sx: {
+      maxHeight: ITEM_HEIGHT * VISIBLE_ITEMS,
+      mt: 1,
+    },
+  },
+  MenuListProps: {
+    disablePadding: true,
+  },
+};
+
+
 
   useEffect(() => {
     // thunk reads token from localStorage; no need to pass token here
@@ -416,7 +438,7 @@ const AddUser = () => {
             label={"Email"}
             icon={<Mail />}
           />
-          <div className="relative">
+          {/* <div className="relative">
             <label className="block text-sm font-medium mb-1">Select Organization</label>
             <select
               name="organization"
@@ -431,14 +453,73 @@ const AddUser = () => {
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
+
+         <label className="block text-sm font-medium mb-1">Select Organization</label>
+
+{/* wrap only the select area so absolute positioning is relative to the select */}
+<div className="relative">
+  {/* icon centered vertically relative to the select input */}
+  <img
+    src="/OrganizationChecklist.svg"
+    alt="org icon"
+    className="absolute left-3 top-1/2 -translate-y-1/2 z-30 h-[25px] w-[25px] pointer-events-none"
+  />
+
+  <FormControl fullWidth>
+    <Select
+      displayEmpty
+      value={formData.organization}
+      onChange={onchange}
+      inputProps={{ name: "organization" }}
+      MenuProps={menuProps}
+      renderValue={(selected) => {
+        if (!selected) return <span className="text-gray-500">Select Organization</span>;
+        const org = Organizations.find((o) => (o._id ?? o.id) === selected);
+        return org?.name ?? selected;
+      }}
+      sx={{
+        pl: "1.5rem",
+        height: SELECT_HEIGHT,
+        backgroundColor: "white",
+        borderRadius: "0.375rem",
+      }}
+    >
+      {(Organizations || []).length === 0 ? (
+        <MenuItem disabled sx={{ height: ITEM_HEIGHT }}>
+          No organizations found
+        </MenuItem>
+      ) : (
+        Organizations.map((org) => {
+          const id = org._id ?? org.id;
+          return (
+            <MenuItem
+              key={id}
+              value={id}
+              sx={{
+                height: ITEM_HEIGHT,
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              {org.name}
+            </MenuItem>
+          );
+        })
+      )}
+    </Select>
+  </FormControl>
+</div>
+
+
+
         </div>
 
         <div className="max-w-sm mx-auto w-full">
           <button
             type="submit"
             disabled={loading}
-            className={`mt-6 bg-blue-600 text-white px-6 py-2 rounded-md w-full ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
+            className={`mt-6 bg-blue-600 text-white px-6 py-2 rounded-md w-full cursor-pointer ${loading ? "opacity-70 cursor-not-allowed" : ""}`}
           >
             {loading ? "Creating..." : "Save"}
           </button>

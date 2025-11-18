@@ -1910,3 +1910,10 @@
     margin: 0 auto;
   }
 }
+
+
+ .small-toast {
+    padding: 3px 5px !important;
+    font-size: 12px !important;
+    min-width: 60px !important;
+  }
