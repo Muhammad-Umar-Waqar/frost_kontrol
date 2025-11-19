@@ -204,6 +204,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useStore } from "../../contexts/storecontexts";
 import { fetchAlertsByOrg } from "../../slices/alertsSlice";
 import { useEffect } from "react";
+import QRCode from "./QrCode";
 
 export default function VenueDetailsPanel({
   organizationId = null,
@@ -212,7 +213,7 @@ export default function VenueDetailsPanel({
   ambientTemperature = 25,
   batteryLow = true,
   needMaintenance = true,
-  apiKey = "8dbf5d2a37c4178b4b03e6c49ae3f9e7",
+  apiKey = "",
 }) {
   const dispatch = useDispatch();
   const { user } = useStore();
@@ -321,7 +322,20 @@ export default function VenueDetailsPanel({
         )}
       </div>
       <div>
-        
+    {apiKey && (
+      <div className="mt-3  p-2 rounded-md bg-white border border-gray-200 text-sm text-gray-700 break-words px-2">
+        <div className="flex items-center justify-between ">
+          <div>
+        <strong>API Key:</strong>
+            <div className="mt-2 text-sm " title={apiKey}>
+              {apiKey ? `${apiKey.slice(0, 15)}...` : ""}
+            </div>
+          </div>
+
+          <QRCode apiKey={apiKey} baseUrl={import.meta.env.VITE_REACT_URI || 'http://localhost:5173'} />
+        </div>
+      </div>
+    )}
       </div>
     </div>
   );

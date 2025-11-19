@@ -3308,7 +3308,10 @@ export default function Dashboard() {
       return
     }
 
+
     let mounted = true
+    let intervalId = null
+    const POLL_MS = 10 * 60 * 1000 // 10 minutes
     const fetchDevices = async () => {
       try {
         const token = localStorage.getItem("token")
@@ -3336,6 +3339,12 @@ export default function Dashboard() {
     }
 
     fetchDevices()
+
+      // start polling (only if venue present)
+  intervalId = setInterval(() => {
+    fetchDevices()
+  }, POLL_MS)
+
     return () => {
       mounted = false
     }
@@ -3471,7 +3480,7 @@ export default function Dashboard() {
               </div>
             </div>
 
-            <AlertsPanel organizationId={selectedOrgId} />
+            <AlertsPanel organizationId={selectedOrgId} pollInterval={10 * 60 * 1000} />
           </>
         )}
 

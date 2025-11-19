@@ -655,14 +655,14 @@ const DeviceList = ({ onDeviceSelect, selectedDevice }) => {
                       <div className="flex justify-center gap-2 sm:gap-3" onClick={(e) => e.stopPropagation()}>
                         <button
                           onClick={() => handleEdit(d)}
-                          className="rounded-full border border-green-500/50 bg-white flex items-center justify-center hover:bg-green-50 p-2"
+                          className="rounded-full border border-green-500/50 bg-white flex items-center justify-center hover:bg-green-50 p-2 cursor-pointer"
                           disabled={working}
                         >
                           <Pencil className="text-green-600" size={16} />
                         </button>
                         <button
                           onClick={() => handleDelete(id, deviceIdDisplay)}
-                          className="rounded-full border border-red-500/50 bg-white flex items-center justify-center hover:bg-red-50 p-2"
+                          className="rounded-full border border-red-500/50 bg-white flex items-center justify-center hover:bg-red-50 p-2 cursor-pointer"
                           disabled={working}
                         >
                           <Trash className="text-red-600" size={16}/>

@@ -139,7 +139,7 @@ import {
   MenuItem,
   TextField,
 } from "@mui/material";
-import { Lock, Mail } from "lucide-react";
+import { Lock, Mail, User2 } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import InputField from "../../Inputs/InputField";
 import PasswordField from "../../Inputs/PasswordField";
@@ -152,7 +152,7 @@ import {
 import { fetchAllOrganizations } from "../../../slices/OrganizationSlice";
 import { useStore } from "../../../contexts/storecontexts";
 import { useNavigate } from "react-router";
-
+import './EditModalStyle.css'
 const style = {
   position: "absolute",
   top: "50%",
@@ -202,6 +202,8 @@ export default function UserEditModal({ handleClose, id }) {
         mgr.organization && typeof mgr.organization === "object"
           ? mgr.organization._id || mgr.organization.id
           : mgr.organization || "";
+
+          console.log("orgId>", orgId, "MGR_ID>>", mgr.organization._id)
 
       setFormData({
         id: mgr._id,
@@ -278,6 +280,7 @@ export default function UserEditModal({ handleClose, id }) {
         icon: "error",
         title: "Update failed",
         text: message,
+        customClass: { container: "swal2-topmost" },
       });
     }
   };
@@ -311,7 +314,7 @@ export default function UserEditModal({ handleClose, id }) {
           value={formData.name}
           onchange={handleChange}
           placeholder="Full name"
-          icon={<Mail size={18} className="text-gray-400" />}
+          icon={<User2 size={18} className="text-gray-400" />}
         />
 
         <InputField
@@ -332,7 +335,7 @@ export default function UserEditModal({ handleClose, id }) {
           value={formData.updated_password}
           onchange={handleChange}
           placeholder="Enter new password (leave blank to keep)"
-          icon={<Lock />}
+          icon={<Lock size={18} className="text-gray-400"/>}
         />
 
         <TextField

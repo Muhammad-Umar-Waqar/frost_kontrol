@@ -882,9 +882,12 @@ const UserList = ({ onUserSelect, selectedUser }) => {
                 </tbody>
               </table>
           // <div className="p-6 text-center">Loading users...</div>
-        ) : error ? (
-          <div className="p-6 text-center text-red-600">Error: {error}</div>
-        ) : displayUsers.length === 0 ? (
+        ) : 
+        // error ? (
+        //   <div className="p-6 text-center text-red-600">Error: {error}</div>
+        // ) 
+        // : 
+        displayUsers.length === 0 ? (
           <div className="p-6 text-center text-gray-600">No users found.</div>
         ) : (
           <div className="user-table-scroll h-[65vh] overflow-y-auto pr-1">
@@ -928,11 +931,11 @@ const UserList = ({ onUserSelect, selectedUser }) => {
 
                     <td className="user-table-cell py-2 sm:py-3 px-2 sm:px-4">
                       <div className="flex justify-center gap-2 sm:gap-3" onClick={(e) => e.stopPropagation()}>
-                        <button onClick={() => handleEditOpen(u._id)} className="user-action-btn rounded-full border border-green-500/50 bg-white flex items-center justify-center hover:bg-green-50 w-8 h-8">
-                          <Pencil className="text-green-600 user-action-icon" size={16} />
+                        <button onClick={() => handleEditOpen(u._id)} className="cursor-pointer user-action-btn rounded-full border border-green-500/50 bg-white flex items-center justify-center hover:bg-green-50 w-8 h-8">
+                          <Pencil className="text-green-600 user-action-icon " size={16} />
                         </button>
-                        <button onClick={() => handleDeleteOpen(u.email, u._id)} className="user-action-btn rounded-full border border-red-500/50 bg-white flex items-center justify-center hover:bg-red-50 w-8 h-8">
-                          <Trash className="text-red-600 user-action-icon" size={16} />
+                        <button onClick={() => handleDeleteOpen(u.email, u._id)} className="cursor-pointer user-action-btn rounded-full border border-red-500/50 bg-white flex items-center justify-center hover:bg-red-50 w-8 h-8">
+                          <Trash className="text-red-600 user-action-icon " size={16} />
                         </button>
                       </div>
                     </td>

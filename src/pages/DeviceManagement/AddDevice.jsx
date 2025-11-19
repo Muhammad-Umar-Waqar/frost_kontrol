@@ -1467,7 +1467,7 @@ const menuProps = {
                 <div className="relative flex-[0.9]">
                   <input
                     type="number"
-                    placeholder={cond.id === "ambient" ? ">=25" : "8"}
+                    placeholder={cond.id === "ambient" ? "25" : "8"}
                     value={cond.value}
                     onChange={(e) => handleConditionChange(idx, "value", e.target.value)}
                     className="w-full pl-3 pr-10 py-2 rounded-md bg-white border border-gray-300 text-gray-700 text-sm"
