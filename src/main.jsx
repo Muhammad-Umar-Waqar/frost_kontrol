@@ -290,7 +290,6 @@ import OrganizationManagement from './pages/OrganizationManagement/page';
 import BrandManagement from './pages/BrandManagement/page';
 import VenueManagement from './pages/VenueManagement/page';
 import Dashboard from './pages/Dashboard/page'
-import ProfilePage from './pages/ProfilePage';
 import App from './App';
 import { Provider } from 'react-redux';
 import store from './store/store';
@@ -365,9 +364,9 @@ createRoot(document.getElementById('root')).render(
                       <Route path="brands" element={<BrandManagement />} />
                        {/* <Route path="profile" element={<ProfilePage />} /> */}
                     </Route>
+                  
                   </Route>
                 </Route>
-              <Route path="/management/profile" element={<ProfilePage />} />
                 {/* Shared authenticated routes */}
                 {/* <Route path="logout" element={<Logout />} /> */}
               </Route>
